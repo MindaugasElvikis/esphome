@@ -21,6 +21,8 @@ from esphome.const import (
 )
 from . import Dsmr, CONF_DSMR_ID
 
+UNIT_KILOAMPERE = "kA"
+UNIT_KILOVOLT = "kV"
 AUTO_LOAD = ["dsmr"]
 
 
@@ -124,20 +126,20 @@ CONFIG_SCHEMA = cv.Schema(
             accuracy_decimals=0,
         ),
         cv.Optional("current_l1"): sensor.sensor_schema(
-            unit_of_measurement=UNIT_AMPERE,
-            accuracy_decimals=1,
+            unit_of_measurement=UNIT_KILOAMPERE,
+            accuracy_decimals=4,
             device_class=DEVICE_CLASS_CURRENT,
             state_class=STATE_CLASS_MEASUREMENT,
         ),
         cv.Optional("current_l2"): sensor.sensor_schema(
-            unit_of_measurement=UNIT_AMPERE,
-            accuracy_decimals=1,
+            unit_of_measurement=UNIT_KILOAMPERE,
+            accuracy_decimals=4,
             device_class=DEVICE_CLASS_CURRENT,
             state_class=STATE_CLASS_MEASUREMENT,
         ),
         cv.Optional("current_l3"): sensor.sensor_schema(
-            unit_of_measurement=UNIT_AMPERE,
-            accuracy_decimals=1,
+            unit_of_measurement=UNIT_KILOAMPERE,
+            accuracy_decimals=4,
             device_class=DEVICE_CLASS_CURRENT,
             state_class=STATE_CLASS_MEASUREMENT,
         ),
@@ -208,20 +210,20 @@ CONFIG_SCHEMA = cv.Schema(
             state_class=STATE_CLASS_MEASUREMENT,
         ),
         cv.Optional("voltage_l1"): sensor.sensor_schema(
-            unit_of_measurement=UNIT_VOLT,
-            accuracy_decimals=1,
+            unit_of_measurement=UNIT_KILOVOLT,
+            accuracy_decimals=4,
             device_class=DEVICE_CLASS_VOLTAGE,
             state_class=STATE_CLASS_MEASUREMENT,
         ),
         cv.Optional("voltage_l2"): sensor.sensor_schema(
-            unit_of_measurement=UNIT_VOLT,
-            accuracy_decimals=1,
+            unit_of_measurement=UNIT_KILOVOLT,
+            accuracy_decimals=4,
             device_class=DEVICE_CLASS_VOLTAGE,
             state_class=STATE_CLASS_MEASUREMENT,
         ),
         cv.Optional("voltage_l3"): sensor.sensor_schema(
-            unit_of_measurement=UNIT_VOLT,
-            accuracy_decimals=1,
+            unit_of_measurement=UNIT_KILOVOLT,
+            accuracy_decimals=4,
             device_class=DEVICE_CLASS_VOLTAGE,
             state_class=STATE_CLASS_MEASUREMENT,
         ),
