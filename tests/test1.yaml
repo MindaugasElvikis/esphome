@@ -358,8 +358,10 @@ esp32_ble_tracker:
 ble_client:
   - mac_address: AA:BB:CC:DD:EE:FF
     id: ble_foo
+    auto_connect: true
   - mac_address: 11:22:33:44:55:66
     id: ble_blah
+    auto_connect: false
     on_connect:
       then:
         - switch.turn_on: ble1_status
@@ -688,7 +690,7 @@ sensor:
     update_interval: 30s
     mode: low_power
     i2c_id: i2c_bus
-  - platform: bme280
+  - platform: bme280_i2c
     temperature:
       name: Outside Temperature
       oversampling: 16x
@@ -702,6 +704,21 @@ sensor:
     iir_filter: 16x
     update_interval: 15s
     i2c_id: i2c_bus
+  - platform: bme280_spi
+    temperature:
+      name: Outside Temperature
+      oversampling: 16x
+    pressure:
+      name: Outside Pressure
+      oversampling: none
+    humidity:
+      name: Outside Humidity
+      oversampling: 8x
+    cs_pin:
+      allow_other_uses: true
+      number: GPIO23
+    iir_filter: 16x
+    update_interval: 15s
   - platform: bme680
     temperature:
       name: Outside Temperature
@@ -2011,6 +2028,18 @@ binary_sensor:
   - platform: dfrobot_sen0395
     id: mmwave_detected_uart
     dfrobot_sen0395_id: mmwave
+  - platform: nfc
+    nfcc_id: nfcc_pn7160_i2c
+    ndef_contains: pulse
+    name: MFC Tag 1
+  - platform: nfc
+    nfcc_id: nfcc_pn7160_i2c
+    tag_id: pulse
+    name: MFC Tag 2
+  - platform: nfc
+    nfcc_id: nfcc_pn7160_i2c
+    uid: 59-FC-AB-15
+    name: MFC Tag 3
 
 pca9685:
   frequency: 500
@@ -3026,6 +3055,16 @@ interval:
               page_id: page1
           then:
             - logger.log: Seeing page 1
+  - interval: 60min
+    then:
+      - ble_client.connect: ble_blah
+      - ble_client.ble_write:
+          id: ble_blah
+          service_uuid: EBE0CCB0-7A0A-4B0C-8A1A-6FF2997DA3A6
+          characteristic_uuid: EBE0CCB7-7A0A-4B0C-8A1A-6FF2997DA3A6
+          value: !lambda |-
+            return {1, 0};
+      - ble_client.disconnect: ble_blah
 
 color:
   - id: kbx_red
@@ -3259,6 +3298,25 @@ display:
       inverted: true
     lambda: |-
       it.rectangle(0, 0, it.get_width(), it.get_height());
+  - platform: st7567_i2c
+    id: st7735_display_i2c
+    address: 0x3F
+    i2c_id: i2c_bus
+    lambda: |-
+      it.rectangle(0, 0, it.get_width(), it.get_height());
+  - platform: st7567_spi
+    id: st7735_display_spi
+    cs_pin:
+      allow_other_uses: true
+      number: GPIO5
+    dc_pin:
+      allow_other_uses: true
+      number: GPIO16
+    reset_pin:
+      allow_other_uses: true
+      number: GPIO23
+    lambda: |-
+      it.rectangle(0, 0, it.get_width(), it.get_height());
   - platform: st7735
     id: st7735_display
     model: INITR_BLACKTAB
@@ -3407,6 +3465,7 @@ pn532_i2c:
   i2c_id: i2c_bus
 
 pn7150_i2c:
+  id: nfcc_pn7150_i2c
   i2c_id: i2c_bus
   irq_pin:
     allow_other_uses: true
